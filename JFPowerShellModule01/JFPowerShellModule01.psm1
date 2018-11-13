@@ -4,7 +4,7 @@ $Public  = @( Get-ChildItem -Path $PSScriptRoot\Modules-Public\*.ps1 -ErrorActio
 
 #Dot source the files
 # Foreach($import in @($Public + $Private))
-Foreach($import in @($Public + $Private))
+Foreach($import in @($Public))
 {
 	Try
 	{
