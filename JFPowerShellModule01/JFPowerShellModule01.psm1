@@ -1,39 +1,20 @@
-function Get-ComputerLocalGroupMembers {
-	param (
-		[parameter(Mandatory=$true)]
-		[String]
-		$ComputerName
-	)
-	
-	$ListofGroupsandMembers = @()
+#Get public and private function definition files.
+$Public  = @( Get-ChildItem -Path $PSScriptRoot\Modules-Public\*.ps1 -ErrorAction SilentlyContinue )
+# $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue )
 
-	#attempt to query WMI on remote server
-	try {
-		$WMIClassMembers = Get-WmiObject -class win32_groupuser -ComputerName $ComputerName -ErrorAction Stop
+#Dot source the files
+# Foreach($import in @($Public + $Private))
+Foreach($import in @($Public + $Private))
+{
+	Try
+	{
+		. $import.fullname
 	}
-	catch {
-		Write-Warning -Message "Problem encountered with access to WMI on $ComputerName"
-		Write-Warning -Message "$($_.Exception.Message)"
+	Catch
+	{
+		Write-Error -Message "Failed to import function $($import.fullname): $_"
 	}
-
-	#Itereate through the WMI results and parse out groups and group members
-	foreach ($Member in $WMIClassMembers) {
-		$MemberName = ($Member.PartComponent).split(',')[1]
-		$MemberName = ($MemberName).split('=')[1]
-		$MemberName = ($MemberName).Trim('"')
-
-		$LocalGroupName = ($Member.GroupComponent).split(',')[1]
-		$LocalGroupName = ($LocalGroupName).split('=')[1]
-		$LocalGroupName = ($LocalGroupName).Trim('"')
-
-		$ListofGroupsandMembers += $member | Select-Object (
-			@{ Label="Computer"; Expression={$_.PSComputerName} },
-			@{ Label="LocalGroupName"; Expression={$LocalGroupName} },
-			@{ Label="MemberName"; Expression={$MemberName} }
-		)
-
-	}
-
-	#print the list of groups and group members
-	$MemberList
 }
+
+# Export the Public modules
+Export-ModuleMember -Function $Public.Basename
