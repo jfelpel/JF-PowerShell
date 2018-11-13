@@ -4,7 +4,7 @@ Param(
 	$ComputerName
 )
 
-$MemberList = @()
+$ListofGroupsandMembers = @()
 
 try {
 	$WMIClassMembers = Get-WmiObject -class win32_groupuser -ComputerName $ComputerName -ErrorAction Stop
@@ -23,7 +23,7 @@ foreach ($Member in $WMIClassMembers) {
 	$LocalGroupName = ($LocalGroupName).split('=')[1]
 	$LocalGroupName = ($LocalGroupName).Trim('"')
 
-	$MemberList += $member | Select-Object (
+	$ListofGroupsandMembers += $member | Select-Object (
 		@{ Label="Computer"; Expression={$_.PSComputerName} },
 		@{ Label="LocalGroupName"; Expression={$LocalGroupName} },
 		@{ Label="MemberName"; Expression={$MemberName} }
