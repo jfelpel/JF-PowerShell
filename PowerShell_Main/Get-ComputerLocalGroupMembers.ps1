@@ -6,6 +6,7 @@ Param(
 
 $ListofGroupsandMembers = @()
 
+#attempt to query WMI on remote server
 try {
 	$WMIClassMembers = Get-WmiObject -class win32_groupuser -ComputerName $ComputerName -ErrorAction Stop
 }
@@ -14,6 +15,7 @@ catch {
 	Write-Warning -Message "$($_.Exception.Message)"
 }
 
+#Itereate through the WMI results and parse out groups and group members
 foreach ($Member in $WMIClassMembers) {
 	$MemberName = ($Member.PartComponent).split(',')[1]
 	$MemberName = ($MemberName).split('=')[1]
@@ -31,4 +33,5 @@ foreach ($Member in $WMIClassMembers) {
 
 }
 
+#print the list of groups and group members
 $MemberList
