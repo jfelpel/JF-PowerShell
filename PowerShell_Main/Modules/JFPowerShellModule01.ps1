@@ -1,4 +1,5 @@
 function Get-ComputerLocalGroupMembers {
+	[CmdletBinding()]
 	param (
 		[parameter(Mandatory=$true)]
 		[String]
@@ -35,5 +36,7 @@ function Get-ComputerLocalGroupMembers {
 	}
 
 	#print the list of groups and group members
-	$MemberList
+	$ListofGroupsandMembers
 }
+
+# Get-ComputerLocalGroupMembers
