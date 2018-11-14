@@ -28,6 +28,7 @@ function Get-ComputerLocalGroupMembers {
 
 	#>
 
+	#I do not yet fully understand "CmdletBinding". Script works without it. No need to add anything superfluous. But, once I learn more about it, I may add it back in.
 	# [CmdletBinding()]
 	param (
 		[parameter(Mandatory=$true)]
